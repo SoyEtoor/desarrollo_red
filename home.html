@@ -12,7 +12,7 @@
     <header class="main-header">
         <h1>Control de Oficinas</h1>
         <div class="search-bar">
-            <input type="text" placeholder="Buscar oficina...">
+            <input type="text" placeholder="Buscar por departamento...">
             <button class="search-btn">
                 <svg viewBox="0 0 24 24" width="20" height="20">
                     <path fill="currentColor"
@@ -40,8 +40,8 @@
                 <div class="office-image"></div>
                 <div class="office-info">
                     <h3>Oficina 2</h3>
-                    <p class="department">Contabilidad</p>
-                    <p class="status inactive">Inactiva</p>
+                    <p class="department">TI</p>
+                    <p class="status active">Activa</p>
                 </div>
             </div>
 
@@ -50,37 +50,7 @@
                 <div class="office-image"></div>
                 <div class="office-info">
                     <h3>Oficina 3</h3>
-                    <p class="department">TI</p>
-                    <p class="status inactive">Inactiva</p>
-                </div>
-            </div>
-
-            <!-- Oficina 4 -->
-            <div class="office-card" data-office="4">
-                <div class="office-image"></div>
-                <div class="office-info">
-                    <h3>Oficina 4</h3>
-                    <p class="department">Marketing</p>
-                    <p class="status inactive">Inactiva</p>
-                </div>
-            </div>
-
-            <!-- Oficina 5 -->
-            <div class="office-card" data-office="5">
-                <div class="office-image"></div>
-                <div class="office-info">
-                    <h3>Oficina 5</h3>
-                    <p class="department">Ventas</p>
-                    <p class="status inactive">Inactiva</p>
-                </div>
-            </div>
-
-            <!-- Oficina 6 -->
-            <div class="office-card" data-office="6">
-                <div class="office-image"></div>
-                <div class="office-info">
-                    <h3>Oficina 6</h3>
-                    <p class="department">Dirección</p>
+                    <p class="department">Contabilidad</p>
                     <p class="status inactive">Inactiva</p>
                 </div>
             </div>
@@ -95,25 +65,31 @@
                 const status = localStorage.getItem(`office-${officeId}-status`) || 'inactive';
                 
                 const statusElement = card.querySelector('.status');
-                statusElement.textContent = status === 'active' ? 'Activa' : (officeId === 'water-leak' ? 'Activo' : 'Inactiva');
+                statusElement.textContent = status === 'active' ? 'Activa' : 'Inactiva';
                 statusElement.classList.remove('active', 'inactive');
                 statusElement.classList.add(status);
+            });
+
+            // Funcionalidad de búsqueda
+            const searchInput = document.querySelector('.search-bar input');
+            
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.trim().toLowerCase();
+                
+                document.querySelectorAll('.office-card').forEach(card => {
+                    const department = card.querySelector('.department').textContent.toLowerCase();
+                    card.classList.toggle('hidden', !department.includes(searchTerm));
+                });
             });
 
             // Manejar clics en las tarjetas
             document.querySelectorAll('.office-card').forEach(card => {
                 card.addEventListener('click', function() {
                     const officeId = this.dataset.office;
-                    
-                    if (officeId === 'water-leak') {
-                        window.location.href = 'water-leak.html';
-                    } else {
-                        window.location.href = `office-detail.html?office=${officeId}`;
-                    }
+                    window.location.href = `office-detail.html?office=${officeId}`;
                 });
             });
         });
     </script>
 </body>
-
 </html>

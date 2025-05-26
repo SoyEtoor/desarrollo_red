@@ -175,15 +175,12 @@ body {
     background-color: #E3E3E3;
     background-size: cover;
     background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .office-image svg {
-    width: 80px;
-    height: 80px;
-    opacity: 0.7;
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
 }
 
 .office-info {
@@ -202,15 +199,17 @@ body {
 }
 
 .office-info .status {
-    font-weight: 500;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
 }
 
 .office-info .status.active {
-    color: #28a745;
+    color: #28a745 !important;
 }
 
 .office-info .status.inactive {
-    color: #dc3545;
+    color: #dc3545 !important;
 }
 
 /* ============================================= */
@@ -345,7 +344,6 @@ body {
     top: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;
-    touch-action: none; /* Mejor manejo táctil */
 }
 
 .toggle-item {
@@ -537,7 +535,7 @@ canvas {
 }
 
 /* ============================================= */
-/* Fuga de Agua - Específicos */
+/* Fuga de Agua */
 /* ============================================= */
 .water-flow-status {
     display: flex;
@@ -629,54 +627,6 @@ canvas {
     text-align: center;
 }
 
-.control-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-.control-row {
-    display: contents;
-}
-
-.control-cell {
-    padding: 1rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.full-width {
-    grid-column: 1 / span 2;
-}
-
-.valve-btn {
-    padding: 0.75rem;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s;
-    width: 100%;
-}
-
-.valve-btn.closed {
-    background-color: #dc3545;
-}
-
-.pressure-display {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-    margin: 0.5rem 0;
-}
-
-.disabled {
-    opacity: 0.6;
-    pointer-events: none;
-}
-
 /* ============================================= */
 /* DISEÑO RESPONSIVE */
 /* ============================================= */
@@ -693,41 +643,23 @@ canvas {
         grid-template-columns: 1fr;
     }
     
-    .search-bar {
-        width: 90%;
-        margin: 0 auto;
-    }
-    
     .office-grid {
         grid-template-columns: 1fr;
         padding: 0 1rem;
     }
     
-    .control-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .full-width {
-        grid-column: 1;
-    }
-}
-
-@media (max-width: 480px) {
     .login-container {
+        width: 90%;
         padding: 1.5rem;
     }
     
-    .office-info, .office-status {
-        padding: 1rem;
+    .search-bar {
+        width: 90%;
     }
+
     
-    .control-item {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-    
-    .slider-container {
-        width: 100%;
-        margin-top: 0.5rem;
-    }
+}
+
+.office-card.hidden {
+    display: none;
 }
