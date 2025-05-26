@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detección de Fugas de Agua - Control de Oficinas</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos adicionales para la nueva estructura */
+        .control-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .control-row {
+            display: contents;
+        }
+        
+        .control-cell {
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .full-width {
+            grid-column: 1 / span 2;
+        }
+        
+        .valve-btn {
+            padding: 0.75rem;
+            background-color: #28a745; /* Verde cuando está abierto */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .valve-btn.closed {
+            background-color: #dc3545; /* Rojo cuando está cerrado */
+        }
+        
+        .pressure-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+        
+        .disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="detail-page">
+    <div class="office-detail-container">
+        <img class="profile-img" src="https://placehold.co/164x173" alt="Sensor de Agua">
+        
+        <div class="office-info">
+            <div class="office-name">Fuga de Agua</div>
+            <div class="office-department">Sistema de Monitoreo</div>
+            <div class="office-manager">Sistema Automático</div>
+        </div>
+        
+        <div class="office-status">
+            <div class="status-label">Estado del sensor:</div>
+            <div class="status-value active">Activo</div>
+            <div class="time-label">Última revisión</div>
+            <div class="time-value" id="lastCheck">Hace 5 minutos</div>
+            <div class="office-toggle">
+                <label class="toggle-switch big-toggle">
+                    <input type="checkbox" id="sensorPower" checked>
+                    <span class="slider round"></span>
+                </label>
+                <span id="sensorPowerLabel">Encendido</span>
+            </div>
+        </div>
+        
+        <div class="control-panel">
+            <h3 class="section-title">Control de Fugas</h3>
+
+            <div class="control-grid">
+                <!-- Fila 1 -->
+                <div class="control-row">
+                    <div class="control-cell">
+                        <div class="control-label">Prueba del Sistema</div>
+                    </div>
+                    <div class="control-cell">
+                        <button id="testButton" class="btn-test">Activar Prueba</button>
+                        <div id="testStatus" class="test-status hidden">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                            <span>Verificando...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fila 2 (ancho completo) -->
+                <div class="control-row">
+                    <div class="control-cell full-width">
+                        <div class="control-label">Advertencia</div>
+                        <div class="water-flow-status">
+                            <i class="fas fa-faucet"></i>
+                            <span>La llave de paso debe estar ABIERTA para realizar pruebas</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fila 3 -->
+                <div class="control-row">
+                    <div class="control-cell">
+                        <div class="control-label">Presión del Sistema</div>
+                    </div>
+                    <div class="control-cell">
+                        <div class="pressure-value">
+                            <span id="pressureValue">--</span>%
+                            <span id="pressureIcon" class="pressure-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fila 4 -->
+                <div class="control-row">
+                    <div class="control-cell">
+                        <div class="control-label">Llave de Paso</div>
+                    </div>
+                    <div class="control-cell">
+                        <button id="valveButton" class="valve-btn">Llave Abierta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="charts-container">
+            <div class="chart-wrapper">
+                <h3 class="section-title">Historial de Presión</h3>
+                <canvas id="pressureChart"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <h3 class="section-title">Eventos Recientes</h3>
+                <div class="events-list" id="eventsList">
+                    <div class="event-entry good">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Sistema inicializado - Llave abierta</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="back-button" id="backButton">Volver a Sensores</button>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Variables globales
+        let pressureData = [];
+        const maxDataPoints = 15;
+        let pressureChart;
+        let valveClosed = false; // Ahora false por defecto (abierta)
+        let testInProgress = false;
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            setupTestButton();
+            setupBackButton();
+            setupSensorToggle();
+            setupValveButton();
+            
+            // Inicializar presión como no disponible
+            document.getElementById('pressureValue').textContent = '--';
+            document.getElementById('pressureIcon').innerHTML = '<i class="fas fa-question-circle"></i>';
+        });
+        
+        // Configurar gráficos
+        function initCharts() {
+            const ctx = document.getElementById('pressureChart').getContext('2d');
+            
+            pressureChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Presión (%)',
+                        data: [],
+                        borderColor: '#36A2EB',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 97,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Botón de prueba
+        function setupTestButton() {
+            const testButton = document.getElementById('testButton');
+            const testStatus = document.getElementById('testStatus');
+            
+            testButton.addEventListener('click', function() {
+                if (valveClosed) {
+                    addEvent('Error: No se puede realizar prueba con llave de paso cerrada', 'warning');
+                    return;
+                }
+                
+                testInProgress = true;
+                testButton.disabled = true;
+                testStatus.classList.remove('hidden');
+                
+                // Simular prueba
+                setTimeout(function() {
+                    // Actualizar presión durante la prueba
+                    updatePressure();
+                    
+                    testStatus.innerHTML = '<i class="fas fa-check"></i> <span>Prueba completada</span>';
+                    addEvent('Prueba del sistema completada', 'good');
+                    
+                    setTimeout(function() {
+                        testStatus.classList.add('hidden');
+                        testButton.disabled = false;
+                        testStatus.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> <span>Verificando...</span>';
+                        testInProgress = false;
+                    }, 3000);
+                }, 2000);
+            });
+        }
+        
+        // Botón de llave de paso - CON CAMBIOS SOLICITADOS
+        function setupValveButton() {
+            const valveButton = document.getElementById('valveButton');
+            
+            // Estado inicial: abierta (valveClosed = false)
+            valveButton.textContent = 'Llave Abierta';
+            valveButton.classList.remove('closed');
+            
+            valveButton.addEventListener('click', function() {
+                valveClosed = !valveClosed;
+                
+                if (valveClosed) {
+                    this.textContent = 'Llave Cerrada';
+                    this.classList.add('closed');
+                    addEvent('Advertencia: Llave de paso CERRADA', 'warning');
+                    
+                    // Si hay una prueba en progreso, cancelarla
+                    if (testInProgress) {
+                        document.getElementById('testStatus').classList.add('hidden');
+                        document.getElementById('testButton').disabled = false;
+                        testInProgress = false;
+                        addEvent('Prueba cancelada - Llave de paso cerrada', 'warning');
+                    }
+                } else {
+                    this.textContent = 'Llave Abierta';
+                    this.classList.remove('closed');
+                    addEvent('Llave de paso ABIERTA', 'good');
+                }
+            });
+        }
+        
+        // Actualizar presión
+        function updatePressure() {
+            if (!testInProgress) return;
+            
+            const pressureValue = document.getElementById('pressureValue');
+            const pressureIcon = document.getElementById('pressureIcon');
+            
+            // Generar presión aleatoria (98-100)
+            const newPressure = Math.floor(Math.random() * 3) + 98;
+            pressureValue.textContent = newPressure;
+            
+            // Actualizar icono según presión
+            if (newPressure === 100) {
+                pressureIcon.innerHTML = '<i class="fas fa-check-circle good"></i>';
+                pressureValue.className = 'good';
+                addEvent(`Presión óptima (${newPressure}%)`, 'good');
+            } else {
+                pressureIcon.innerHTML = '<i class="fas fa-exclamation-triangle warning"></i>';
+                pressureValue.className = 'warning';
+                addEvent(`Presión reducida detectada (${newPressure}%)`, 'warning');
+            }
+            
+            addChartData(newPressure);
+            updateLastCheck();
+        }
+        
+        // Añadir datos al gráfico
+        function addChartData(value) {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            pressureData.push({
+                time: timeString,
+                value: value
+            });
+            
+            if (pressureData.length > maxDataPoints) {
+                pressureData.shift();
+            }
+            
+            pressureChart.data.labels = pressureData.map(item => item.time);
+            pressureChart.data.datasets[0].data = pressureData.map(item => item.value);
+            pressureChart.update();
+        }
+        
+        // Añadir evento a la lista
+        function addEvent(message, type = 'info') {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const eventsList = document.getElementById('eventsList');
+            
+            const eventEntry = document.createElement('div');
+            eventEntry.className = `event-entry ${type}`;
+            
+            let iconClass = 'fa-info-circle';
+            if (type === 'good') iconClass = 'fa-check-circle';
+            if (type === 'warning') iconClass = 'fa-exclamation-triangle';
+            
+            eventEntry.innerHTML = `
+                <i class="fas ${iconClass}"></i>
+                <span>${message} - ${timeString}</span>
+            `;
+            
+            eventsList.insertBefore(eventEntry, eventsList.firstChild);
+            
+            // Limitar a 10 eventos visibles
+            if (eventsList.children.length > 10) {
+                eventsList.removeChild(eventsList.lastChild);
+            }
+        }
+        
+        // Actualizar última revisión
+        function updateLastCheck() {
+            const lastCheck = document.getElementById('lastCheck');
+            const now = new Date();
+            lastCheck.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+        
+        // Configurar botón de volver
+        function setupBackButton() {
+            document.getElementById('backButton').addEventListener('click', function() {
+                window.location.href = 'home.html';
+            });
+        }
+        
+        // Configurar toggle del sensor
+        function setupSensorToggle() {
+            const sensorToggle = document.getElementById('sensorPower');
+            const sensorLabel = document.getElementById('sensorPowerLabel');
+            
+            sensorToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    sensorLabel.textContent = 'Encendido';
+                    addEvent('Sensor activado', 'good');
+                } else {
+                    sensorLabel.textContent = 'Apagado';
+                    addEvent('Sensor desactivado', 'warning');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oficinas - Control de Oficinas</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="home-page">
+    <header class="main-header">
+        <h1>Control de Oficinas</h1>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar oficina...">
+            <button class="search-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path fill="currentColor"
+                        d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="offices-container">
+        <h2 class="section-title">Oficinas Disponibles</h2>
+        <div class="office-grid">
+            <!-- Oficina 1 -->
+            <div class="office-card" data-office="1">
+                <div class="office-image"></div>
+                <div class="office-info">
+                    <h3>Oficina 1</h3>
+                    <p class="department">Recursos Humanos</p>
+                    <p class="status inactive">Inactiva</p>
+                </div>
+            </div>
+
+            <!-- Oficina 2 -->
+            <div class="office-card" data-office="2">
+                <div class="office-image"></div>
+                <div class="office-info">
+                    <h3>Oficina 2</h3>
+                    <p class="department">Contabilidad</p>
+                    <p class="status inactive">Inactiva</p>
+                </div>
+            </div>
+
+            <!-- Oficina 3 -->
+            <div class="office-card" data-office="3">
+                <div class="office-image"></div>
+                <div class="office-info">
+                    <h3>Oficina 3</h3>
+                    <p class="department">TI</p>
+                    <p class="status inactive">Inactiva</p>
+                </div>
+            </div>
+
+            <!-- Oficina 4 -->
+            <div class="office-card" data-office="4">
+                <div class="office-image"></div>
+                <div class="office-info">
+                    <h3>Oficina 4</h3>
+                    <p class="department">Marketing</p>
+                    <p class="status inactive">Inactiva</p>
+                </div>
+            </div>
+
+            <!-- Oficina 5 -->
+            <div class="office-card" data-office="5">
+                <div class="office-image"></div>
+                <div class="office-info">
+                    <h3>Oficina 5</h3>
+                    <p class="department">Ventas</p>
+                    <p class="status inactive">Inactiva</p>
+                </div>
+            </div>
+
+            <!-- Oficina 6 -->
+            <div class="office-card" data-office="6">
+                <div class="office-image"></div>
+                <div class="office-info">
+                    <h3>Oficina 6</h3>
+                    <p class="department">Dirección</p>
+                    <p class="status inactive">Inactiva</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar estados desde localStorage
+            document.querySelectorAll('.office-card').forEach(card => {
+                const officeId = card.dataset.office;
+                const status = localStorage.getItem(`office-${officeId}-status`) || 'inactive';
+                
+                const statusElement = card.querySelector('.status');
+                statusElement.textContent = status === 'active' ? 'Activa' : (officeId === 'water-leak' ? 'Activo' : 'Inactiva');
+                statusElement.classList.remove('active', 'inactive');
+                statusElement.classList.add(status);
+            });
+
+            // Manejar clics en las tarjetas
+            document.querySelectorAll('.office-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const officeId = this.dataset.office;
+                    
+                    if (officeId === 'water-leak') {
+                        window.location.href = 'water-leak.html';
+                    } else {
+                        window.location.href = `office-detail.html?office=${officeId}`;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

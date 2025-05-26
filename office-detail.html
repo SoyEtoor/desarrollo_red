@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Oficina - Control de Oficinas</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="detail-page">
+    <div class="office-detail-container">
+        <img class="profile-img" src="https://placehold.co/164x173" alt="Foto de perfil">
+        
+        <div class="office-info">
+            <div class="office-name">Oficina 1</div>
+            <div class="office-department">Recursos Humanos</div>
+            <div class="office-manager">Iván Ramos</div>
+        </div>
+        
+        <div class="office-status">
+            <div class="status-label">Estado de la oficina:</div>
+            <div class="status-value inactive">Inactiva</div>
+            <div class="time-label">Tiempo activo</div>
+            <div class="time-value">0 horas</div>
+            <div class="office-toggle">
+                <label class="toggle-switch big-toggle">
+                    <input type="checkbox" id="officePower">
+                    <span class="slider round"></span>
+                </label>
+                <span id="officePowerLabel">Apagado</span>
+            </div>
+        </div>
+        
+        <div class="control-panel">
+            <h3 class="section-title">Iluminación</h3>
+
+            <div class="control-section">
+                <div class="control-item">
+                    <div class="control-label">Iluminación</div>
+                    <div class="control-value">0%</div>
+                    <div class="slider-container">
+                        <div class="slider-track">
+                            <div class="slider-fill" style="width: 0%;"></div>
+                            <div class="slider-knob" style="left: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-item">
+                    <div class="control-label">Persianas</div>
+                    <div class="control-value">0%</div>
+                    <div class="slider-container">
+                        <div class="slider-track">
+                            <div class="slider-fill" style="width: 0%;"></div>
+                            <div class="slider-knob" style="left: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-item">
+                    <div class="control-label">Ventana</div>
+                    <div class="control-value">0%</div>
+                    <div class="slider-container">
+                        <div class="slider-track">
+                            <div class="slider-fill" style="width: 0%;"></div>
+                            <div class="slider-knob" style="left: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 class="section-title">Temperatura</h3>
+            
+            <div class="control-section">
+                <div class="control-item">
+                    <div class="control-label">Humedad</div>
+                    <div class="control-value">--</div>
+                </div>
+            
+                <div class="control-item">
+                    <div class="control-label">Calidad del Aire</div>
+                    <div class="control-value">--</div>
+                </div>
+                
+                <div class="control-item toggle-item">
+                    <div class="control-label">Clima</div>
+                    <div class="control-value">Off</div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="climateToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                
+                <div class="control-item temperature-control" id="climateTempControl" style="display: none;">
+                    <div class="control-label">Temperatura</div>
+                    <div class="control-value">22°</div>
+                    <div class="temp-adjust">
+                        <button class="temp-btn minus">-</button>
+                        <button class="temp-btn plus">+</button>
+                    </div>
+                </div>
+                
+                <div class="control-item toggle-item">
+                    <div class="control-label">Calefacción</div>
+                    <div class="control-value">Off</div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="heatingToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                
+                <div class="control-item temperature-control" id="heatingTempControl" style="display: none;">
+                    <div class="control-label">Temperatura</div>
+                    <div class="control-value">26°</div>
+                    <div class="temp-adjust">
+                        <button class="temp-btn minus">-</button>
+                        <button class="temp-btn plus">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="charts-container">
+            <div class="chart-wrapper">
+                <h3 class="section-title">Historial de Temperatura</h3>
+                <canvas id="temperatureChart"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <h3 class="section-title">Historial de Iluminación</h3>
+                <canvas id="lightingChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="logs-container">
+            <h3 class="section-title">Registro de Cambios</h3>
+            <div class="logs-list" id="logsList">
+                
+            </div>
+        </div>
+        
+        <button class="back-button" id="backButton">Volver a Oficinas</button>
+    </div>
+    <script src="js/main.js"></script>
+    <script>
+        // Modificación del código JavaScript para estado inicial
+        let logs = [];
+        let officeActive = false; // Estado inicial apagado
+        let climateTemp = 22;
+        let heatingTemp = 26;
+        const user = "Admin";
+        let temperatureChart;
+        let lightingChart;
+        let temperatureData = [];
+        let lightingData = [];
+        const maxDataPoints = 20;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const officeId = urlParams.get('office');
+            
+            // Cargar estado desde localStorage
+            const savedState = localStorage.getItem(`office-${officeId}-status`);
+            officeActive = savedState === 'active';
+            
+            setupSliders();
+            setupToggles();
+            setupTemperatureControls();
+            setupOfficeToggle(officeId);
+            initCharts();
+            setupBackButton();
+            
+            if (officeActive) {
+                setDefaultValues();
+                document.getElementById('officePower').checked = true;
+                document.querySelector('.status-value').textContent = 'Activa';
+                document.querySelector('.status-value').classList.add('active');
+                document.querySelector('.status-value').classList.remove('inactive');
+                addChartData('temperature', climateTemp);
+                addChartData('lighting', 50);
+            }
+        });
+
+        function setupOfficeToggle(officeId) {
+            const officeToggle = document.getElementById('officePower');
+            const officeLabel = document.getElementById('officePowerLabel');
+            
+            officeToggle.checked = officeActive;
+            officeLabel.textContent = officeActive ? 'Encendido' : 'Apagado';
+            
+            officeToggle.addEventListener('change', function() {
+                officeActive = this.checked;
+                localStorage.setItem(`office-${officeId}-status`, this.checked ? 'active' : 'inactive');
+                
+                const statusValue = document.querySelector('.status-value');
+                statusValue.textContent = this.checked ? 'Activa' : 'Inactiva';
+                statusValue.classList.toggle('active', this.checked);
+                statusValue.classList.toggle('inactive', !this.checked);
+                
+                document.querySelector('.office-detail-container').classList.toggle('office-off', !this.checked);
+                
+                if (!this.checked) {
+                    resetControls();
+                    addLog(`${user} - Oficina - Apagada`);
+                } else {
+                    setDefaultValues();
+                    addLog(`${user} - Oficina - Encendida`);
+                }
+            });
+        }
+
+        function resetControls() {
+            document.querySelectorAll('.slider-fill').forEach(fill => {
+                fill.style.width = '0%';
+            });
+            
+            document.querySelectorAll('.slider-knob').forEach(knob => {
+                knob.style.left = '0%';
+            });
+            
+            document.querySelectorAll('.control-value').forEach(value => {
+                if (value.textContent.includes('%')) {
+                    value.textContent = '0%';
+                }
+            });
+            
+            document.getElementById('climateToggle').checked = false;
+            document.getElementById('heatingToggle').checked = false;
+            
+            document.getElementById('climateToggle').dispatchEvent(new Event('change'));
+            document.getElementById('heatingToggle').dispatchEvent(new Event('change'));
+            
+            addChartData('lighting', 0);
+        }
+
+        function setDefaultValues() {
+            document.querySelectorAll('.slider-fill').forEach(fill => {
+                fill.style.width = '50%';
+            });
+            
+            document.querySelectorAll('.slider-knob').forEach(knob => {
+                knob.style.left = '50%';
+            });
+            
+            document.querySelectorAll('.control-value').forEach(value => {
+                if (value.textContent.includes('%')) {
+                    value.textContent = '50%';
+                }
+            });
+            
+            document.querySelector('#climateTempControl .control-value').textContent = '22°';
+            document.querySelector('#heatingTempControl .control-value').textContent = '26°';
+            
+            document.getElementById('climateToggle').checked = false;
+            document.getElementById('heatingToggle').checked = false;
+            document.getElementById('climateToggle').dispatchEvent(new Event('change'));
+            document.getElementById('heatingToggle').dispatchEvent(new Event('change'));
+            
+            addChartData('lighting', 50);
+            addChartData('temperature', 22);
+        }
+
+        // Resto de las funciones permanecen igual que en main.js original
+    </script>
+</body>
+</html>

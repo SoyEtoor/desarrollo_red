@@ -1,0 +1,733 @@
+/* ============================================= */
+/* ESTILOS GENERALES */
+/* ============================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f7;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* ============================================= */
+/* PÁGINA DE LOGIN */
+/* ============================================= */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #345B6A, #428698);
+}
+
+.login-container {
+    position: relative;
+    background: white;
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    margin: 1rem;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header h1 {
+    color: #345B6A;
+    margin-bottom: 0.5rem;
+}
+
+.login-header p {
+    color: #666;
+}
+
+.login-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+    font-weight: 500;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border 0.3s;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: #428698;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #345B6A;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #428698;
+}
+
+/* ============================================= */
+/* PÁGINA PRINCIPAL (HOME) */
+/* ============================================= */
+.home-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.main-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.main-header h1 {
+    color: #345B6A;
+    margin-bottom: 1rem;
+}
+
+.search-bar {
+    display: flex;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+}
+
+.search-btn {
+    padding: 0 1rem;
+    background: #345B6A;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn:hover {
+    background: #428698;
+}
+
+.offices-container h2 {
+    color: #345B6A;
+    margin-bottom: 2em;
+    text-align: center;
+}
+
+.office-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.office-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.office-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.office-image {
+    height: 150px;
+    background-color: #E3E3E3;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.office-image svg {
+    width: 80px;
+    height: 80px;
+    opacity: 0.7;
+}
+
+.office-info {
+    padding: 1.5rem;
+}
+
+.office-info h3 {
+    color: #1E1E1E;
+    margin-bottom: 0.5rem;
+}
+
+.office-info .department {
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.office-info .status {
+    font-weight: 500;
+}
+
+.office-info .status.active {
+    color: #28a745;
+}
+
+.office-info .status.inactive {
+    color: #dc3545;
+}
+
+/* ============================================= */
+/* PÁGINA DE DETALLE DE OFICINA */
+/* ============================================= */
+.detail-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.office-detail-container {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.profile-img {
+    width: 164px;
+    height: 173px;
+    background: #E3E3E3;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.office-info, .office-status {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.office-name {
+    font-size: 1.5rem;
+    color: #1E1E1E;
+    margin-bottom: 0.5rem;
+}
+
+.office-department {
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.office-manager {
+    color: #1E1E1E;
+}
+
+.office-status {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.status-label, .time-label {
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 600;
+}
+
+.status-value, .time-value {
+    color: #1E1E1E;
+}
+
+.status-value.active {
+    color: #28a745;
+}
+
+.control-panel {
+    grid-column: span 2;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    color: #1E1E1E;
+    text-align: center;
+    margin: 1.5rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.control-section {
+    margin-bottom: 2rem;
+}
+
+.control-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.control-label {
+    width: 100px;
+    color: #1E1E1E;
+    font-weight: 500;
+}
+
+.control-value {
+    flex: 1;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.slider-container {
+    width: 150px;
+    position: relative;
+}
+
+.slider-track {
+    height: 6px;
+    background: #E3E3E3;
+    border-radius: 3px;
+    position: relative;
+}
+
+.slider-fill {
+    position: absolute;
+    height: 100%;
+    background: #BEDCE3;
+    border-radius: 3px;
+}
+
+.slider-knob {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: #345B6A;
+    border-radius: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    touch-action: none; /* Mejor manejo táctil */
+}
+
+.toggle-item {
+    justify-content: space-between;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 32px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #345B6A;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.charts-container {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.chart-wrapper {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+canvas {
+    width: 100% !important;
+    height: 300px !important;
+}
+
+.logs-container {
+    grid-column: span 2;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+}
+
+.logs-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
+.log-entry {
+    padding: 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.9rem;
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+.temperature-control {
+    display: none;
+    justify-content: space-between;
+}
+
+.temperature-control.visible {
+    display: flex;
+}
+
+.temp-adjust {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.temp-btn {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.temp-btn:hover {
+    background: #f0f0f0;
+}
+
+.office-toggle {
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.big-toggle {
+    width: 60px;
+    height: 34px;
+    margin: 0 1rem;
+}
+
+.big-toggle .slider:before {
+    width: 26px;
+    height: 26px;
+    left: 4px;
+    bottom: 4px;
+}
+
+.office-off .slider-fill,
+.office-off .slider-knob {
+    display: none;
+}
+
+.office-off .slider-track {
+    background: #f0f0f0;
+}
+
+.office-off .toggle-switch input:checked + .slider {
+    background-color: #ccc;
+}
+
+.office-off .control-value {
+    color: #ccc;
+}
+
+.back-button {
+    grid-column: span 2;
+    padding: 0.75rem 1.5rem;
+    background-color: #345B6A;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 2rem;
+    justify-self: center;
+}
+
+.back-button:hover {
+    background-color: #428698;
+}
+
+/* ============================================= */
+/* Fuga de Agua - Específicos */
+/* ============================================= */
+.water-flow-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #345B6A;
+}
+
+.water-flow-status i {
+    font-size: 1.2rem;
+}
+
+.pressure-value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+}
+
+.pressure-icon {
+    font-size: 1.2rem;
+}
+
+.pressure-item {
+    justify-content: space-between;
+}
+
+.good {
+    color: #28a745;
+}
+
+.warning {
+    color: #dc3545;
+}
+
+.btn-test {
+    padding: 0.5rem 1rem;
+    background-color: #345B6A;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-test:hover {
+    background-color: #428698;
+}
+
+.btn-test:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.test-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    color: #345B6A;
+}
+
+.test-status.hidden {
+    display: none;
+}
+
+.events-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
+.event-entry {
+    padding: 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.event-entry:last-child {
+    border-bottom: none;
+}
+
+.event-entry i {
+    width: 20px;
+    text-align: center;
+}
+
+.control-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.control-row {
+    display: contents;
+}
+
+.control-cell {
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.full-width {
+    grid-column: 1 / span 2;
+}
+
+.valve-btn {
+    padding: 0.75rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+.valve-btn.closed {
+    background-color: #dc3545;
+}
+
+.pressure-display {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 0.5rem 0;
+}
+
+.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* ============================================= */
+/* DISEÑO RESPONSIVE */
+/* ============================================= */
+@media (max-width: 768px) {
+    .office-detail-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-img, .office-info, .office-status, .control-panel, .charts-container, .logs-container, .back-button {
+        grid-column: span 1;
+    }
+    
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-bar {
+        width: 90%;
+        margin: 0 auto;
+    }
+    
+    .office-grid {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
+    }
+    
+    .control-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .full-width {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 1.5rem;
+    }
+    
+    .office-info, .office-status {
+        padding: 1rem;
+    }
+    
+    .control-item {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .slider-container {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+}
