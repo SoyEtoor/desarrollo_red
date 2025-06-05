@@ -290,7 +290,7 @@ function initCharts() {
             scales: {
                 y: {
                     beginAtZero: true,
-                    max: 100
+                    suggestedMax: 100
                 }
             }
         }

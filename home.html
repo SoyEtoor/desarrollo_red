@@ -59,36 +59,51 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Cargar estados desde localStorage
-            document.querySelectorAll('.office-card').forEach(card => {
-                const officeId = card.dataset.office;
-                const status = localStorage.getItem(`office-${officeId}-status`) || 'inactive';
-                
-                const statusElement = card.querySelector('.status');
-                statusElement.textContent = status === 'active' ? 'Activa' : 'Inactiva';
-                statusElement.classList.remove('active', 'inactive');
-                statusElement.classList.add(status);
-            });
-
-            // Funcionalidad de búsqueda
+            const API_URL = 'http://localhost:8080/api';
+            const grid = document.querySelector('.office-grid');
             const searchInput = document.querySelector('.search-bar input');
-            
-            searchInput.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.trim().toLowerCase();
-                
-                document.querySelectorAll('.office-card').forEach(card => {
-                    const department = card.querySelector('.department').textContent.toLowerCase();
-                    card.classList.toggle('hidden', !department.includes(searchTerm));
-                });
+        
+            async function updateOffices(searchTerm = '') {
+                try {
+                    const response = await fetch(`${API_URL}/oficinas`);
+                    const oficinas = await response.json();
+                    
+                    grid.innerHTML = '';
+                    
+                    oficinas
+                        .filter(oficina => 
+                            oficina.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            oficina.departamento.toLowerCase().includes(searchTerm.toLowerCase())
+                        )
+                        .forEach(oficina => {
+                            const card = document.createElement('div');
+                            card.className = `office-card ${oficina.estado.toLowerCase()}`;
+                            card.dataset.office = oficina.id;
+                            card.innerHTML = `
+                                <div class="office-image"></div>
+                                <div class="office-info">
+                                    <h3>${oficina.nombre}</h3>
+                                    <p class="department">${oficina.departamento}</p>
+                                    <p class="status ${oficina.estado.toLowerCase()}">${oficina.estado}</p>
+                                </div>
+                            `;
+                            card.addEventListener('click', () => {
+                                window.location.href = `office-detail.html?office=${oficina.id}`;
+                            });
+                            grid.appendChild(card);
+                        });
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+        
+            searchInput.addEventListener('input', (e) => {
+                updateOffices(e.target.value);
             });
-
-            // Manejar clics en las tarjetas
-            document.querySelectorAll('.office-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const officeId = this.dataset.office;
-                    window.location.href = `office-detail.html?office=${officeId}`;
-                });
-            });
+        
+            updateOffices();
+            setInterval(updateOffices, 5000);
         });
     </script>
 </body>
